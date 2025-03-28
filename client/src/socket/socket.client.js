@@ -15,7 +15,7 @@ export const initializeSocket = (userId) => {
 		auth: { userId },
 		withCredentials: true, // Ensures cookies are sent with requests
 		reconnection: true, // Enables automatic reconnection
-		reconnectionAttempts: 5, // Maximum attempts before giving up
+		reconnectionAttempts: 6, // Maximum attempts before giving up
 		reconnectionDelay: 1000, // Delay between reconnections (1s)
 	});
 
