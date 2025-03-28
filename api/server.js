@@ -30,7 +30,7 @@ const __dirname = path.resolve();
 initializeSocket(httpServer);
 
 // Middleware
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
 
 // ✅ Fix CORS: Allow frontend requests
