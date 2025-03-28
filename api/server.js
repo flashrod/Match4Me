@@ -36,7 +36,7 @@ app.use(cookieParser());
 // ✅ Fix CORS: Allow frontend requests
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: process.env.CLIENT_URL || "https://match4me-backend.onrender.com",
     credentials: true, // Allow cookies & authentication headers
     methods: "GET,POST,PUT,DELETE,OPTIONS", // Allowed methods
   })
@@ -49,13 +49,7 @@ app.use("/api/matches", matchRoutes);
 app.use("/api/messages", messageRoutes);
 
 // ✅ Fix Deployment Check: Use "production" instead of "deployment"
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "/client/dist")));
 
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
-  });
-}
 
 // Start Server
 httpServer.listen(PORT, () => {
