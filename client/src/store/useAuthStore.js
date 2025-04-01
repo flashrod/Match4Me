@@ -33,6 +33,29 @@ export const useAuthStore = create((set) => ({
     }
   },
 
+  signup: async (signupData) => {
+    try {
+      set({ loading: true });
+      const res = await axiosInstance.post(`${CLIENT_URL}/api/auth/signup`, signupData, {
+        withCredentials: true, // Ensures cookies are sent
+      });
+
+      set({ authUser: res.data.user });
+
+      // ✅ Initialize WebSocket after successful signup
+      if (res.data.user && res.data.user._id) {
+        initializeSocket(res.data.user._id); // Pass user ID for socket connection
+      }
+
+      toast.success("Signed up successfully");
+    } catch (error) {
+      console.error("Signup Error:", error.response?.data?.message);
+      toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      set({ loading: false });
+    }
+  },
+
   // Logout Function
   logout: async () => {
     try {

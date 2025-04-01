@@ -28,7 +28,7 @@ export const useMatchStore = create((set) => ({
   getUserProfiles: async () => {
     try {
       set({ isLoadingUserProfiles: true });
-      const res = await axiosInstance.get("/matches/user-profiles");
+      const res = await axiosInstance.get("/api/matches/user-profiles");
       set({ userProfiles: res.data.users });
     } catch (error) {
       set({ userProfiles: [] });
