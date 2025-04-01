@@ -4,21 +4,16 @@ import cors from "cors";
 import path from "path";
 import { createServer } from "http";
 import dotenv from "dotenv";
-
-// Import Routes
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import matchRoutes from "./routes/matchRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 
-// Import Database & Socket
 import { connectDB } from "./config/db.js";
 import { initializeSocket } from "./socket/socket.server.js";
 
-// Load environment variables
-dotenv.config();
+dotenv.config({ path: path.resolve("api", ".env") });
 
-// Log the MongoDB URI and Client URL (for debugging purposes)
 console.log("MongoDB URI:", process.env.MONGO_URI);
 console.log("Client URL:", process.env.CLIENT_URL);
 

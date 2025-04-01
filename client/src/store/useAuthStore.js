@@ -3,8 +3,7 @@ import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 import { disconnectSocket, initializeSocket } from "../socket/socket.client";
 
-// Base URL for the client-side API requests
-const CLIENT_URL = "http://localhost:5000"; // Ensure this is the correct URL for your backend
+const CLIENT_URL = "http://localhost:5000"; 
 
 export const useAuthStore = create((set) => ({
   authUser: null,

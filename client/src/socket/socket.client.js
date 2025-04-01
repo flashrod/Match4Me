@@ -1,6 +1,6 @@
 import io from "socket.io-client";
 
-const SOCKET_URL = "http://localhost:5000"; // Ensure correct backend port
+const SOCKET_URL = "http://localhost:5000"; 
 
 let socket = null;
 
@@ -14,7 +14,7 @@ export const initializeSocket = (userId) => {
   socket = io(SOCKET_URL, {
     auth: { userId },
     withCredentials: true,
-    transports: ["websocket", "polling"], // Ensures WebSockets work
+    transports: ["websocket", "polling"], 
     reconnection: true,
     reconnectionAttempts: 6,
     reconnectionDelay: 1000,
