@@ -17,7 +17,8 @@ import { initializeSocket } from "./socket/socket.server.js";
 
 // Load environment variables
 dotenv.config();
-console.log("Test variable:", process.env.TEST_VARIABLE);
+
+// Log the MongoDB URI and Client URL (for debugging purposes)
 console.log("MongoDB URI:", process.env.MONGO_URI);
 console.log("Client URL:", process.env.CLIENT_URL);
 
@@ -30,15 +31,15 @@ const __dirname = path.resolve();
 initializeSocket(httpServer);
 
 // Middleware
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
 
 // ✅ Fix CORS: Allow frontend requests
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "https://match4me-backend.onrender.com",
-    credentials: true, // Allow cookies & authentication headers
-    methods: "GET,POST,PUT,DELETE,OPTIONS", // Allowed methods
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true,
+    methods: "GET,POST,PUT,DELETE,OPTIONS",
   })
 );
 
@@ -47,9 +48,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/matches", matchRoutes);
 app.use("/api/messages", messageRoutes);
-
-// ✅ Fix Deployment Check: Use "production" instead of "deployment"
-
 
 // Start Server
 httpServer.listen(PORT, () => {
