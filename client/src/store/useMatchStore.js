@@ -25,17 +25,24 @@ export const useMatchStore = create((set) => ({
   },
 
   // Fetching user profiles
-  getUserProfiles: async () => {
-    try {
-      set({ isLoadingUserProfiles: true });
-      const res = await axiosInstance.get("/matches/user-profiles");
-      set({ userProfiles: res.data.users });
-    } catch (error) {
-      set({ userProfiles: [] });
-      toast.error(error.response?.data?.message || "Failed to load profiles");
-    } finally {
-      set({ isLoadingUserProfiles: false });
-    }
+  // In useMatchStore.js, modify the getUserProfiles function
+ getUserProfiles : async () => {
+	try {
+	  const response = await axios.get('/api/users/profiles');
+	  
+	  // Add a proper check for the response data
+	  if (response.data && Array.isArray(response.data) && response.data.length > 0) {
+		setProfiles(response.data);
+	  } else {
+		// Handle empty array properly
+		setProfiles([]);
+		console.log('No user profiles available yet');
+	  }
+	} catch (error) {
+	  console.error('Error fetching user profiles:', error);
+	  // Set profiles to empty array instead of throwing
+	  setProfiles([]);
+	}
   },
 
   // Swipe left on a user
