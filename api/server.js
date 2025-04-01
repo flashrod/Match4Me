@@ -14,7 +14,10 @@ import messageRoutes from "./routes/messageRoutes.js";
 import { connectDB } from "./config/db.js";
 import { initializeSocket } from "./socket/socket.server.js";
 
-dotenv.config();
+dotenv.config({ path: path.resolve("api", ".env") });
+
+console.log("MongoDB URI:", process.env.MONGO_URI);
+console.log("Client URL:", process.env.CLIENT_URL);
 
 const app = express();
 const httpServer = createServer(app);
