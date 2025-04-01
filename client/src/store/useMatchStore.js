@@ -4,26 +4,27 @@ import toast from "react-hot-toast";
 import { getSocket } from "../socket/socket.client";
 
 export const useMatchStore = create((set) => ({
-  matches: [], // Ensure it's always an array
+  matches: [],
   isLoadingMyMatches: false,
   isLoadingUserProfiles: false,
   userProfiles: [],
   swipeFeedback: null,
 
+  // Fetching the user's matches
   getMyMatches: async () => {
     try {
       set({ isLoadingMyMatches: true });
       const res = await axiosInstance.get("/matches");
-      set({ matches: res.data.matches || [] }); // Ensure it's an array
+      set({ matches: res.data.matches });
     } catch (error) {
-      console.error("Fetch matches error:", error);
-      set({ matches: [] }); // Set an empty array on error
+      set({ matches: [] });
       toast.error(error.response?.data?.message || "Something went wrong");
     } finally {
       set({ isLoadingMyMatches: false });
     }
   },
 
+  // Fetching user profiles
   getUserProfiles: async () => {
     try {
       set({ isLoadingUserProfiles: true });
@@ -31,36 +32,37 @@ export const useMatchStore = create((set) => ({
       set({ userProfiles: res.data.users });
     } catch (error) {
       set({ userProfiles: [] });
-      toast.error(error.response?.data?.message || "Something went wrong");
+      toast.error(error.response?.data?.message || "Failed to load profiles");
     } finally {
       set({ isLoadingUserProfiles: false });
     }
   },
 
+  // Swipe left on a user
   swipeLeft: async (user) => {
     try {
       set({ swipeFeedback: "passed" });
-      await axiosInstance.post("/matches/swipe-left/" + user._id);
+      await axiosInstance.post(`/matches/swipe-left/${user._id}`);
     } catch (error) {
-      console.log(error);
       toast.error("Failed to swipe left");
     } finally {
       setTimeout(() => set({ swipeFeedback: null }), 1500);
     }
   },
 
+  // Swipe right on a user
   swipeRight: async (user) => {
     try {
       set({ swipeFeedback: "liked" });
-      await axiosInstance.post("/matches/swipe-right/" + user._id);
+      await axiosInstance.post(`/matches/swipe-right/${user._id}`);
     } catch (error) {
-      console.log(error);
       toast.error("Failed to swipe right");
     } finally {
       setTimeout(() => set({ swipeFeedback: null }), 1500);
     }
   },
 
+  // Subscribe to new matches via socket
   subscribeToNewMatches: () => {
     try {
       const socket = getSocket();
@@ -72,16 +74,18 @@ export const useMatchStore = create((set) => ({
         toast.success("You got a new match!");
       });
     } catch (error) {
-      console.log(error);
+      toast.error("Error subscribing to new matches");
+      console.error(error);
     }
   },
 
+  // Unsubscribe from new matches via socket
   unsubscribeFromNewMatches: () => {
     try {
       const socket = getSocket();
       socket.off("newMatch");
     } catch (error) {
-      console.error(error);
+      console.error("Error unsubscribing from new matches:", error);
     }
   },
 }));

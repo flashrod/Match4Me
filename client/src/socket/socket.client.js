@@ -1,44 +1,29 @@
 import io from "socket.io-client";
 
-const SOCKET_URL = "http://localhost:5000"; // Ensure correct backend port
+const SOCKET_URL = import.meta.env.MODE === "development" ? "http://localhost:5000" : "/";
 
 let socket = null;
 
 export const initializeSocket = (userId) => {
-  if (socket) {
-    console.log("🔌 Disconnecting existing socket...");
-    socket.disconnect();
-  }
+	if (socket) {
+		socket.disconnect();
+	}
 
-  console.log("🔌 Connecting to socket server at", SOCKET_URL);
-  socket = io(SOCKET_URL, {
-    auth: { userId },
-    withCredentials: true,
-    transports: ["websocket", "polling"], // Ensures WebSockets work
-    reconnection: true,
-    reconnectionAttempts: 6,
-    reconnectionDelay: 1000,
-  });
-
-  socket.on("connect", () => console.log("✅ Socket connected:", socket.id));
-  socket.on("disconnect", () => console.warn("⚠️ Socket disconnected"));
-  socket.on("connect_error", (err) =>
-    console.error("❌ Socket connection error:", err)
-  );
+	socket = io(SOCKET_URL, {
+		auth: { userId },
+	});
 };
 
 export const getSocket = () => {
-  if (!socket) {
-    console.error("⚠️ Attempted to use socket before initialization");
-    throw new Error("Socket not initialized. Call initializeSocket(userId) first.");
-  }
-  return socket;
+	if (!socket) {
+		throw new Error("Socket not initialized");
+	}
+	return socket;
 };
 
 export const disconnectSocket = () => {
-  if (socket) {
-    console.log("🔌 Disconnecting socket...");
-    socket.disconnect();
-    socket = null;
-  }
+	if (socket) {
+		socket.disconnect();
+		socket = null;
+	}
 };
